@@ -1,7 +1,7 @@
 package ru.hse.BikeSharing.domain;
 
 
-public final class Views {
+public final class JsonViews {
     public interface Id {
     }
 

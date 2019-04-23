@@ -11,11 +11,14 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
-	maven { url "https://maven.vaadin.com/vaadin-addons" }
+}
+
+ext {
+	set('vaadinVersion', '13.0.3')
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.vaadin:vaadin-spring-boot-starter'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
@@ -24,6 +27,14 @@ dependencies {
 	compile('javax.xml.bind:jaxb-api')
 	compile('com.sun.xml.bind:jaxb-core')
 	compile('com.sun.xml.bind:jaxb-impl')
+
+	compile 'com.google.api-client:google-api-client:1.25.0'
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
+	}
 }

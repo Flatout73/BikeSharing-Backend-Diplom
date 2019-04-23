@@ -5,7 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.domain.Bike;
-import ru.hse.BikeSharing.domain.Views;
+import ru.hse.BikeSharing.domain.JsonViews;
 import ru.hse.BikeSharing.repo.BikeRepo;
 
 import java.time.LocalDateTime;
@@ -35,7 +35,6 @@ public class BikeController {
 
     @PostMapping
     public Bike create(@RequestBody Bike bike) {
-        bike.setCreationDate(LocalDateTime.now());
         return bikeRepo.save(bike);
     }
 
