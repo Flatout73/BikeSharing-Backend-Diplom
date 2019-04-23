@@ -41,9 +41,9 @@ public class BikeController {
     @PutMapping("{id}")
     public Bike update(
             @PathVariable("id") Bike messageFromDb,
-            @RequestBody Bike message
+            @RequestBody Bike bike
     ) {
-        BeanUtils.copyProperties(message, messageFromDb, "id");
+        BeanUtils.copyProperties(bike, messageFromDb, "id");
 
         return bikeRepo.save(messageFromDb);
     }

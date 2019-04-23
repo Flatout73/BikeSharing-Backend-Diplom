@@ -14,7 +14,7 @@ import ru.hse.BikeSharing.repo.BikeRepo;
 
 
 @Route("bike")
-public class MainView extends VerticalLayout {
+public class BikeView extends VerticalLayout {
 
     private Grid<Bike> grid = new Grid<>(Bike.class);
 
@@ -27,7 +27,7 @@ public class MainView extends VerticalLayout {
     private HorizontalLayout toolbar = new HorizontalLayout(filter, addNewBtn);
 
     @Autowired
-    public MainView(BikeRepo bikeRepo, BikeEditor editor) {
+    public BikeView(BikeRepo bikeRepo, BikeEditor editor) {
         this.bikeRepo = bikeRepo;
         this.editor = editor;
 
