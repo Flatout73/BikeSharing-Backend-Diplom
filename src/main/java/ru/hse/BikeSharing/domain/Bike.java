@@ -8,7 +8,6 @@ import org.springframework.data.geo.Point;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 @Entity
 @Table
@@ -25,8 +24,4 @@ public class Bike extends AuditModel {
     @NotBlank
     private Point location;
 
-//    @Column(updatable = false)
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-//    @JsonView(JsonViews.FullMessage.class)
-//    private LocalDateTime creationDate;
 }
