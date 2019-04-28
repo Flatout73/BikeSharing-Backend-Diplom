@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.4.RELEASE'
 	id 'java'
+	id "io.freefair.lombok" version "3.2.1"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -17,9 +18,9 @@ ext {
 	set('vaadinVersion', '13.0.3')
 }
 
-configurations {
-	jaxb
-}
+//configurations {
+//	jaxb
+//}
 
 dependencies {
 	implementation 'com.vaadin:vaadin-spring-boot-starter'
@@ -27,7 +28,7 @@ dependencies {
 
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.postgresql:postgresql')
-	compile('org.projectlombok:lombok')
+//	compile('org.projectlombok:lombok')
 //	compile('javax.xml.bind:jaxb-api')
 //	compile('com.sun.xml.bind:jaxb-core')
 //	compile('com.sun.xml.bind:jaxb-impl')
