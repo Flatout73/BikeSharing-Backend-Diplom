@@ -2,7 +2,7 @@ package ru.hse.BikeSharing.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.hse.BikeSharing.NotFoundException;
+import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.domain.Ride;
 import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.repo.RideRepo;

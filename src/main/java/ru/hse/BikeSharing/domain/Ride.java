@@ -33,4 +33,9 @@ public class Ride extends AuditModel {
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="transaction_id")
+    @JsonIgnore
+    private Transaction transaction;
 }
