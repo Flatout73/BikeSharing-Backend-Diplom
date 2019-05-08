@@ -4,25 +4,25 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.hse.BikeSharing.NotFoundException;
-import ru.hse.BikeSharing.domain.Bike;
+import ru.hse.BikeSharing.errors.NotFoundException;
+import ru.hse.BikeSharing.domain.Transaction;
 import ru.hse.BikeSharing.domain.User;
+import ru.hse.BikeSharing.errors.PaymentException;
 import ru.hse.BikeSharing.repo.UserRepo;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class MainController {
-
 
     private static final JacksonFactory jacksonFactory = new JacksonFactory();
 
@@ -90,7 +90,22 @@ public class MainController {
 
             throw new NotFoundException("Invalid ID token.");
         }
+    }
 
+    @PostMapping("/pay")
+    public void pay(@RequestBody Transaction transaction) {
+        Stripe.apiKey = "sk_test_ZqNt8J9LjjVxFYgl79HegSIt00wxmbVVyS";
 
+        Map<String, Object> chargeParams = new HashMap<String, Object>();
+        chargeParams.put("amount", (int)(transaction.getCost() * 100));
+        chargeParams.put("currency", transaction.getCurrency());
+        chargeParams.put("description", transaction.getDescription());
+        chargeParams.put("source", transaction.getToken());
+
+        try {
+            Charge.create(chargeParams);
+        } catch (StripeException e) {
+            throw new PaymentException(e.getMessage());
+        }
     }
 }

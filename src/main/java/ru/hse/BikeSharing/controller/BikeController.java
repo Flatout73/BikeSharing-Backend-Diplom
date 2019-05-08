@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/bike")
+@RequestMapping("/api/bike")
 public class BikeController {
     private final BikeRepo bikeRepo;
 

@@ -18,22 +18,19 @@ ext {
 	set('vaadinVersion', '13.0.3')
 }
 
-//configurations {
-//	jaxb
-//}
-
 dependencies {
 	implementation 'com.vaadin:vaadin-spring-boot-starter'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.postgresql:postgresql')
-//	compile('org.projectlombok:lombok')
 //	compile('javax.xml.bind:jaxb-api')
 //	compile('com.sun.xml.bind:jaxb-core')
 //	compile('com.sun.xml.bind:jaxb-impl')
 
 	compile 'com.google.api-client:google-api-client:1.25.0'
+
+	compile "com.stripe:stripe-java:9.10.0"
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
