@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.geo.Point;
-import java.time.LocalDateTime;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -21,12 +21,13 @@ public class Ride extends AuditModel {
     private Point endLocation;
 
 //        @Column(updatable = false)
-//    @JsonFormat(shape = JsonFormat.Shape., pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
 //    @JsonView(JsonViews.FullMessage.class)
-    private LocalDateTime startTime = LocalDateTime.now();
-    private LocalDateTime endTime;
+    private Date startTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private Date endTime;
 
-    private Double price;
+    private Double cost;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -38,4 +39,8 @@ public class Ride extends AuditModel {
     @JoinColumn(name="transaction_id")
     @JsonIgnore
     private Transaction transaction;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "bike_id")
+    private Bike bike;
 }
