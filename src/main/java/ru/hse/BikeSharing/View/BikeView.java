@@ -13,7 +13,7 @@ import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.repo.BikeRepo;
 
 
-@Route("bike")
+@Route("bikes")
 public class BikeView extends VerticalLayout {
 
     private Grid<Bike> grid = new Grid<>(Bike.class);

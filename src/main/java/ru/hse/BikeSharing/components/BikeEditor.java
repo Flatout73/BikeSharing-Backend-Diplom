@@ -12,6 +12,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
 import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.repo.BikeRepo;
 
@@ -36,7 +37,8 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
 
     /* Fields to edit properties in Customer entity */
     TextField name = new TextField("Bike name");
-    //TextField lastName = new TextField("Last name");
+    TextField locationX = new TextField("Location X");
+    TextField locationY = new TextField("Location Y");
 
     /* Action buttons */
     Button save = new Button("Save", VaadinIcon.CHECK.create());
@@ -52,8 +54,39 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
     public BikeEditor(BikeRepo repository) {
         this.repository = repository;
 
-        add(name, actions);
+        add(name, locationX, locationY, actions);
 
+        binder.bind(locationX, bike -> {
+            if (bike.getLocation() != null) {
+                return String.valueOf(bike.getLocation().getX());
+            } else {
+                return "";
+            }
+        }, (bike, title) -> {
+            Point point;
+            if (bike.getLocation() != null) {
+                point = new Point(Double.parseDouble(title), bike.getLocation().getY());
+            } else {
+                point = new Point(Double.parseDouble(title), Double.parseDouble(title));
+            }
+            bike.setLocation(point);
+        });
+
+        binder.bind(locationY, bike -> {
+            if (bike.getLocation() != null) {
+                return String.valueOf(bike.getLocation().getY());
+            } else {
+                return "";
+            }
+        }, (bike, title) -> {
+            Point point;
+            if (bike.getLocation() != null) {
+                point = new Point(bike.getLocation().getX(), Double.parseDouble(title));
+            } else {
+                point = new Point(Double.parseDouble(title), Double.parseDouble(title));
+            }
+            bike.setLocation(point);
+        });
         // bind using naming convention
         binder.bindInstanceFields(this);
 
