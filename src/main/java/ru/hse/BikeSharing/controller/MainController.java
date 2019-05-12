@@ -8,9 +8,14 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.hse.BikeSharing.DBFileStorageService;
+import ru.hse.BikeSharing.domain.DBFile;
 import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.domain.Transaction;
 import ru.hse.BikeSharing.domain.User;
@@ -28,9 +33,12 @@ public class MainController {
 
     UserRepo userRepo;
 
+    private DBFileStorageService DBFileStorageService;
+
     @Autowired
-    public MainController(UserRepo userRepo) {
+    public MainController(UserRepo userRepo, DBFileStorageService fileService) {
         this.userRepo = userRepo;
+        this.DBFileStorageService = fileService;
     }
 
     @PostMapping("/tokensignin")
@@ -107,5 +115,16 @@ public class MainController {
         } catch (StripeException e) {
             throw new PaymentException(e.getMessage());
         }
+    }
+
+    @GetMapping("/downloadFile/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+        // Load file from database
+        DBFile dbFile = DBFileStorageService.getFile(fileId);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(dbFile.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFileName() + "\"")
+                .body(new ByteArrayResource(dbFile.getData()));
     }
 }

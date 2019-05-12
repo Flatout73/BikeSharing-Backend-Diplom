@@ -2,6 +2,8 @@ package ru.hse.BikeSharing.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 
@@ -29,6 +31,9 @@ public class Ride extends AuditModel {
 
     private Double cost;
 
+    private Point[] locations;
+
+    private String imageURL;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -37,7 +42,6 @@ public class Ride extends AuditModel {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="transaction_id")
-    @JsonIgnore
     private Transaction transaction;
 
     @ManyToOne(fetch = FetchType.EAGER)
