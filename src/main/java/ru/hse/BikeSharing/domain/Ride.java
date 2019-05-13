@@ -22,6 +22,9 @@ public class Ride extends AuditModel {
     private Point startLocation;
     private Point endLocation;
 
+    private String startAddress;
+    private String endAddress;
+
 //        @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
 //    @JsonView(JsonViews.FullMessage.class)
