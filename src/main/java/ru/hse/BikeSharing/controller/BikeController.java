@@ -21,15 +21,15 @@ public class BikeController {
         this.bikeRepo = bikeRepo;
     }
 
-    @GetMapping
+    @GetMapping("all")
     //@JsonView(Views.IdName.class)
     public List<Bike> list() {
         return bikeRepo.findAll();
     }
 
-    @GetMapping("{id}")
+    @GetMapping
     //@JsonView(Views.FullMessage.class)
-    public Bike getOne(@PathVariable("id") Bike bike) {
+    public Bike getOne(@RequestParam("id") Bike bike) {
         return bike;
     }
 
@@ -38,9 +38,9 @@ public class BikeController {
         return bikeRepo.save(bike);
     }
 
-    @PutMapping("{id}")
+    @PutMapping
     public Bike update(
-            @PathVariable("id") Bike messageFromDb,
+            @RequestParam("id") Bike messageFromDb,
             @RequestBody Bike bike
     ) {
         BeanUtils.copyProperties(bike, messageFromDb, "id");

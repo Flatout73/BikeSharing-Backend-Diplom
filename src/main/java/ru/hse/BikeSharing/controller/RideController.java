@@ -4,12 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.hse.BikeSharing.DBFileStorageService;
-import ru.hse.BikeSharing.PointDeserializer;
+import ru.hse.BikeSharing.Services.DBFileStorageService;
+import ru.hse.BikeSharing.Services.PointDeserializer;
 import ru.hse.BikeSharing.domain.DBFile;
 import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.domain.Ride;
@@ -18,10 +17,8 @@ import ru.hse.BikeSharing.repo.RideRepo;
 import ru.hse.BikeSharing.repo.UserRepo;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rides")
@@ -71,6 +68,8 @@ public class RideController {
         existingRide.setEndLocation(ride.getEndLocation());
         existingRide.setCost(price * ((existingRide.getEndTime().getTime() - existingRide.getStartTime().getTime()) / 1000.0 / 60.0 + 1));
         existingRide.setLocations(ride.getLocations());
+        //existingRide.setStartAddress(ride.getStartAddress());
+        existingRide.setEndAddress(ride.getEndAddress());
 
         DBFile dbFile = DBFileStorageService.storeFile(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -78,7 +77,7 @@ public class RideController {
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
 
-       // existingRide.setImage(file.getBytes());
+        existingRide.setImageURL(fileDownloadUri);
         rideRepo.save(existingRide);
 
         return existingRide;

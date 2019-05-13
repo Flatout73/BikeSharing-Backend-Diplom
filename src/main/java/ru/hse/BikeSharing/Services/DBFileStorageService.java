@@ -1,4 +1,4 @@
-package ru.hse.BikeSharing;
+package ru.hse.BikeSharing.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,12 @@ public class DBFileStorageService {
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
+    }
+
+    public DBFile storeImage(byte[] bytes, String fileName) {
+        DBFile dbFile = new DBFile(fileName, "image/png", bytes);
+
+        return dbFileRepository.save(dbFile);
     }
 
     public DBFile getFile(Long fileId) {

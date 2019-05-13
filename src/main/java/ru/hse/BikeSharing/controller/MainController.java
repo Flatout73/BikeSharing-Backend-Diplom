@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hse.BikeSharing.DBFileStorageService;
+import ru.hse.BikeSharing.Services.DBFileStorageService;
 import ru.hse.BikeSharing.domain.DBFile;
 import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.domain.Transaction;

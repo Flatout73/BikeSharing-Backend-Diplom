@@ -3,6 +3,7 @@ package ru.hse.BikeSharing.components;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -13,6 +14,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import ru.hse.BikeSharing.Services.QRCodeGenerator;
 import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.repo.BikeRepo;
 
@@ -39,22 +41,30 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
     TextField name = new TextField("Bike name");
     TextField locationX = new TextField("Location X");
     TextField locationY = new TextField("Location Y");
+    Image qrImage = new Image();
 
     /* Action buttons */
     Button save = new Button("Save", VaadinIcon.CHECK.create());
     Button cancel = new Button("Cancel");
     Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-    HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+
+    Button qrcode = new Button("QR Code");
+    HorizontalLayout actions = new HorizontalLayout(save, cancel, delete, qrcode);
+    VerticalLayout verticalLayout = new VerticalLayout(name, locationX, locationY);
+    HorizontalLayout qrHorizontal = new HorizontalLayout(verticalLayout, qrImage);
 
     Binder<Bike> binder = new Binder<>(Bike.class);
     @Setter
     private ChangeHandler changeHandler;
 
-    @Autowired
-    public BikeEditor(BikeRepo repository) {
-        this.repository = repository;
+    QRCodeGenerator qrCodeGenerator;
 
-        add(name, locationX, locationY, actions);
+    @Autowired
+    public BikeEditor(BikeRepo repository, QRCodeGenerator qrCodeGenerator) {
+        this.repository = repository;
+        this.qrCodeGenerator = qrCodeGenerator;
+
+        add(qrHorizontal, actions);
 
         binder.bind(locationX, bike -> {
             if (bike.getLocation() != null) {
@@ -102,6 +112,11 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
         cancel.addClickListener(e -> editBike(bike));
+
+        qrcode.addClickListener(e -> setQrcode());
+        qrImage.setWidth("200px");
+        qrImage.setHeight("200px");
+
         setVisible(false);
     }
 
@@ -113,6 +128,16 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
     void save() {
         repository.save(bike);
         changeHandler.onChange();
+    }
+
+    void setQrcode() {
+        try {
+            bike.setQrcodeURL(qrCodeGenerator.generateQRCodeImage(bike.getId().toString(), 200, 200, "bike" + bike.getName()));
+            repository.save(bike);
+            changeHandler.onChange();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public interface ChangeHandler {
@@ -129,6 +154,13 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
         }
         else {
             bike = newBike;
+        }
+
+        if (bike.getQrcodeURL() != null) {
+            qrImage.setSrc(bike.getQrcodeURL());
+            qrImage.setSizeFull();
+        } else {
+            qrImage.setSrc("");
         }
 
         // Bind customer properties to similarly named fields
