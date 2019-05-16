@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.1.4.RELEASE'
 	id 'java'
 	id "io.freefair.lombok" version "3.2.1"
+	//id "com.devsoap.vaadin-flow" version "1.1.2"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -39,10 +40,15 @@ dependencies {
 	compile 'com.google.api-client:google-api-client:1.25.0'
 	compile "com.stripe:stripe-java:9.10.0"
 
-	compile group: 'org.vaadin.addon', name: 'v-leaflet', version: '1.1.0'
+	compile group: 'org.webjars.bowergithub.googlewebcomponents', name: 'google-map', version: '2.0.5'
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+//vaadinClientDependencies {
+//	bower 'GoogleWebComponents/google-map'
+//}
+
 
 dependencyManagement {
 	imports {

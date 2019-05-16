@@ -1,0 +1,23 @@
+<!-- Dependency resources -->
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+<!-- Defines the hello-world element -->
+<dom-module id="hello-world">
+    <template>
+        <!-- Input element that updates the name property in the model -->
+        <paper-input id="inputId" value="{{name}}" style="width: 200px"></paper-input>
+        <!-- Input element that shows the greeting from the model -->
+        <div id="greeting">[[greeting]]</div>
+    </template>
+
+    <!-- Polymer boilerplate to register the hello-world element -->
+    <script>
+        class HelloWorld extends Polymer.Element {
+            static get is() {
+                return 'hello-world'
+            }
+        }
+        customElements.define(HelloWorld.is, HelloWorld);
+    </script>
+</dom-module>
