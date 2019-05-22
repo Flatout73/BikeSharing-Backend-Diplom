@@ -9,13 +9,15 @@ import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 @HtmlImport("google-map-poly.html")
 public class GoogleMapPolyline extends Component {
 
+    public GoogleMapPolyline() { }
+
     public GoogleMapPolyline(GoogleMapPoint[] points) {
         for (GoogleMapPoint point: points) {
             getElement().appendChild(point.getElement());
         }
     }
 
-//    public void addPoint(GoogleMapPoint point) {
-//        getElement().appendChild(point.getElement());
-//    }
+    public void addPoint(GoogleMapPoint point) {
+        getElement().appendChild(point.getElement());
+    }
 }

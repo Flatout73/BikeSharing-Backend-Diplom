@@ -20,6 +20,7 @@ import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.domain.Transaction;
 import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.errors.PaymentException;
+import ru.hse.BikeSharing.repo.TransactionRepo;
 import ru.hse.BikeSharing.repo.UserRepo;
 
 import java.io.IOException;
@@ -32,13 +33,15 @@ public class MainController {
     private static final JacksonFactory jacksonFactory = new JacksonFactory();
 
     UserRepo userRepo;
+    TransactionRepo transactionRepo;
 
     private DBFileStorageService DBFileStorageService;
 
     @Autowired
-    public MainController(UserRepo userRepo, DBFileStorageService fileService) {
+    public MainController(UserRepo userRepo, DBFileStorageService fileService, TransactionRepo transactionRepo) {
         this.userRepo = userRepo;
         this.DBFileStorageService = fileService;
+        this.transactionRepo = transactionRepo;
     }
 
     @PostMapping("/tokensignin")
@@ -109,6 +112,8 @@ public class MainController {
         chargeParams.put("currency", transaction.getCurrency());
         chargeParams.put("description", transaction.getDescription());
         chargeParams.put("source", transaction.getToken());
+
+        transactionRepo.save(transaction);
 
         try {
             Charge.create(chargeParams);

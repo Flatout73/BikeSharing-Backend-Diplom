@@ -13,58 +13,44 @@ import ru.hse.BikeSharing.components.GoogleMap;
 import ru.hse.BikeSharing.components.GoogleMapMarker;
 import ru.hse.BikeSharing.components.GoogleMapPoint;
 import ru.hse.BikeSharing.components.GoogleMapPolyline;
+import ru.hse.BikeSharing.domain.Bike;
+import ru.hse.BikeSharing.domain.RestrictedZone;
 import ru.hse.BikeSharing.repo.BikeRepo;
+import ru.hse.BikeSharing.repo.RestrictedZoneRepo;
 
 @Route("map")
 @StyleSheet("frontend://styles.css")
 public class MapView extends VerticalLayout {
 
     BikeRepo repo;
+    RestrictedZoneRepo zoneRepo;
 
     final String API_KEY = "AIzaSyA3wPm0y-ibxAD5qXCxTqz3yReluwcFbDE";
 
     @Autowired
-    public MapView(BikeRepo repo) {
+    public MapView(BikeRepo repo,  RestrictedZoneRepo zoneRepo) {
         this.repo = repo;
-
-        GoogleMapMarker marker = new GoogleMapMarker();
-        marker.setLatitude(62);
-        marker.setLongitude(24);
-        //marker.setDraggable(true);
+        this.zoneRepo = zoneRepo;
 
         GoogleMap map = new GoogleMap(API_KEY);
-        map.setLatitude(62);
-        map.setLongitude(24);
 
-        GoogleMapPoint point1 = new GoogleMapPoint();
-        point1.setLatitude(60.0);
-        point1.setLongitude(24.9);
-        GoogleMapPoint point2 = new GoogleMapPoint();
-        point2.setLatitude(68.7);
-        point2.setLongitude(29.5);
+        for (Bike bike: repo.findAll()) {
+            GoogleMapMarker marker = new GoogleMapMarker();
+            marker.setLatitude(bike.getLocation().getX());
+            marker.setLongitude(bike.getLocation().getY());
 
-        GoogleMapPoint point3 = new GoogleMapPoint(57.7, 30.5);
-      //  point3.setLatitude(57.7);
-       // point3.setLongitude(30.5);
+            map.addMarker(marker);
+        }
 
-        //point1.getElement().setAttribute("hidden", false);
-       // point1.getElement().setProperty("hidden", false);
+        GoogleMapPolyline polyline = new GoogleMapPolyline();
+        for (RestrictedZone zone: zoneRepo.findAll()) {
+            for (Point point: zone.getPoints()) {
+                GoogleMapPoint mapPoint = new GoogleMapPoint(point.getX(), point.getY());
+                polyline.addPoint(mapPoint);
+            }
+        }
 
-        //point2.getElement().setAttribute("hidden", false);
-       // point2.getElement().setProperty("hidden", false);
-
-        //point3.getElement().setAttribute("hidden", false);
-       // point3.getElement().setProperty("hidden", false);
-//
-//        polyline.addPoint(point1);
-//        polyline.addPoint(point2);
-//        polyline.addPoint(point3);
-
-        GoogleMapPoint[] ps = new GoogleMapPoint[]{ point1, point2, point3 };
-        GoogleMapPolyline polyline = new GoogleMapPolyline(ps);
         polyline.getElement().setAttribute("closed", true);
-
-        map.addMarker(marker);
         map.addPolyline(polyline);
 
         Paragraph copyright = new Paragraph();

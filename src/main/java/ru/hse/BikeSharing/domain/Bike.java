@@ -23,17 +23,9 @@ import java.util.List;
 @EntityListeners(BikeListener.class)
 public class Bike extends AuditModel {
     @Id
-    @GeneratedValue(generator = "sequence-generator")
-    @GenericGenerator(
-            name = "sequence-generator",
-            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-            parameters = {
-                    @Parameter(name = "sequence_name", value = "user_sequence"),
-                    @Parameter(name = "initial_value", value = "4"),
-                    @Parameter(name = "increment_size", value = "1")
-            }
-    )
-    private Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     @Size(min = 3, max = 100)
     private String name;
