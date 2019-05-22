@@ -9,7 +9,7 @@ import ru.hse.BikeSharing.domain.Bike;
 import java.util.List;
 
 @Repository
-public interface BikeRepo extends JpaRepository<Bike, Long> {
+public interface BikeRepo extends JpaRepository<Bike, String> {
     @Query("from Bike b where b.name like concat('%', :name, '%')")
     List<Bike> findByName(@Param("name") String name);
 }
