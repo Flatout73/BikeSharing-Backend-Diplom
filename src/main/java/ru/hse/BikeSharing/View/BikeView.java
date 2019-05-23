@@ -13,7 +13,7 @@ import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.repo.BikeRepo;
 
 
-@Route("bikes")
+@Route(value = "bikes", layout = MainLayout.class)
 public class BikeView extends VerticalLayout {
 
     private Grid<Bike> grid = new Grid<>(Bike.class);
@@ -33,6 +33,7 @@ public class BikeView extends VerticalLayout {
 
         add(toolbar, grid, editor);
 
+        this.setHeightFull();
        // grid.setHeight("300px");
         //grid.setColumns("id", "name");
        // grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);

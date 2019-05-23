@@ -1,0 +1,59 @@
+
+h1 {
+    color: skyblue !important;
+    margin-top: .25em;
+}
+
+h2 {
+    color: red !important;
+}
+
+.copyright {
+    font-size: small;
+    color: royalblue;
+    background-color: aliceblue;
+}
+
+.main-view {
+    font-family: sans-serif;
+}
+
+/*.main-view a[router-link] {*/
+/*display: block;*/
+/*margin-top: 10px;*/
+/*}*/
+
+.container {
+    margin-top: 20px;
+    padding: 0 20px 0 20px;
+}
+
+.container>h2 {
+    margin-bottom: 0;
+}
+
+.menu {
+    background: #fff;
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: auto;
+    height: 90px;
+}
+
+.topnav {
+    padding: 14px 0 10px 5%;
+    background: #00b4f0;
+    margin: 0px;
+}
+
+.topnav > a {
+    padding-right: 10px;
+    color: #ccf0fc;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.topnav .selected {
+    color: white;
+}
