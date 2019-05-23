@@ -17,9 +17,8 @@ public class GoogleMap extends Component {
 
         getElement().setProperty("fitToMarkers", true);
 
-        getElement().getStyle().set("height", "450px");
+        getElement().getStyle().set("height", "500px");
         getElement().getStyle().set("width", "100%");
-
     }
 
     public GoogleMap(String apiKey) {

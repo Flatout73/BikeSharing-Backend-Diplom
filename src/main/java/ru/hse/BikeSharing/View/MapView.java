@@ -1,6 +1,7 @@
 package ru.hse.BikeSharing.View;
 
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
@@ -18,7 +19,7 @@ import ru.hse.BikeSharing.domain.RestrictedZone;
 import ru.hse.BikeSharing.repo.BikeRepo;
 import ru.hse.BikeSharing.repo.RestrictedZoneRepo;
 
-@Route("map")
+@Route(value = "map", layout = MainLayout.class)
 @StyleSheet("frontend://styles.css")
 public class MapView extends VerticalLayout {
 
@@ -42,22 +43,26 @@ public class MapView extends VerticalLayout {
             map.addMarker(marker);
         }
 
-        GoogleMapPolyline polyline = new GoogleMapPolyline();
+        GoogleMapPolyline polylineManual = new GoogleMapPolyline();
+        polylineManual.addPoint(new GoogleMapPoint(55, 37));
+        polylineManual.addPoint(new GoogleMapPoint(56, 37));
+        polylineManual.addPoint(new GoogleMapPoint(55, 36));
+        polylineManual.addPoint(new GoogleMapPoint(54, 38));
+        polylineManual.getElement().setAttribute("closed", true);
+        map.addPolyline(polylineManual);
+
         for (RestrictedZone zone: zoneRepo.findAll()) {
+            GoogleMapPolyline polyline = new GoogleMapPolyline();
             for (Point point: zone.getPoints()) {
                 GoogleMapPoint mapPoint = new GoogleMapPoint(point.getX(), point.getY());
                 polyline.addPoint(mapPoint);
             }
+            polyline.getElement().setAttribute("closed", true);
+            map.addPolyline(polyline);
         }
 
-        polyline.getElement().setAttribute("closed", true);
-        map.addPolyline(polyline);
-
-        Paragraph copyright = new Paragraph();
-        copyright.setText("(c) Google 2018");
-        copyright.addClassName("copyright");
-
-        add(map, copyright);
+        add(map);
+        setHeightFull();
     }
 
 }

@@ -9,12 +9,9 @@ import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 @HtmlImport("google-map-poly.html")
 public class GoogleMapPolyline extends Component {
 
-    public GoogleMapPolyline() { }
-
-    public GoogleMapPolyline(GoogleMapPoint[] points) {
-        for (GoogleMapPoint point: points) {
-            getElement().appendChild(point.getElement());
-        }
+    public GoogleMapPolyline() {
+        getElement().setAttribute("fill-color", "blue");
+        getElement().setAttribute("fill-opacity", "0.1");
     }
 
     public void addPoint(GoogleMapPoint point) {

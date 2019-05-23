@@ -16,4 +16,6 @@ public class RestrictedZone extends AuditModel {
     private Long id;
 
     Point[] points;
+
+    private String name;
 }

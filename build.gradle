@@ -40,6 +40,8 @@ dependencies {
 	compile 'com.google.api-client:google-api-client:1.25.0'
 	compile "com.stripe:stripe-java:9.10.0"
 
+	compile("org.springframework.boot:spring-boot-starter-security")
+
 	compile group: 'org.webjars.bowergithub.googlewebcomponents', name: 'google-map', version: '2.0.5'
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

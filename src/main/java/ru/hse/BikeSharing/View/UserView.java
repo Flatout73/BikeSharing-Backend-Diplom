@@ -8,7 +8,7 @@ import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.repo.UserRepo;
 
-@Route("users")
+@Route(value = "users", layout = MainLayout.class)
 public class UserView extends VerticalLayout {
 
     private Grid<User> grid = new Grid<>(User.class);
@@ -24,6 +24,7 @@ public class UserView extends VerticalLayout {
             grid.getUI().ifPresent(ui -> ui.navigate(RideView.class, e.getValue().getId().toString()));
         });
 
+        this.setHeightFull();
         showUsers("");
     }
 
