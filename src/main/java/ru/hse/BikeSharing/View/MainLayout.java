@@ -2,6 +2,7 @@ package ru.hse.BikeSharing.View;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -38,6 +39,7 @@ public class MainLayout extends Composite<Div>
                MapView.class);
         template.setId("map-link");
 
+        //e -> Notification.show("hello")
         RouterLink components = new RouterLink("Bikes",
                 BikeView.class);
         components.setId("bike-link");

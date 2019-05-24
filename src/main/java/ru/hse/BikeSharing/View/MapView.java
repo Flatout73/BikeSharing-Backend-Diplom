@@ -1,6 +1,7 @@
 package ru.hse.BikeSharing.View;
 
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -64,5 +65,4 @@ public class MapView extends VerticalLayout {
         add(map);
         setHeightFull();
     }
-
 }

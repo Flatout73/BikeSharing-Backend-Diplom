@@ -1,4 +1,4 @@
-package ru.hse.BikeSharing.domain;
+package ru.hse.BikeSharing;
 
 
 public final class JsonViews {
