@@ -28,6 +28,7 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 
 @RestController
+@RequestMapping("/api")
 public class MainController {
 
     private static final JacksonFactory jacksonFactory = new JacksonFactory();

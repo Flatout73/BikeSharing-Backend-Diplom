@@ -30,6 +30,8 @@ public class User extends AuditModel {
     private String email;
     private String pictureURL;
     private String locale;
+    @JsonIgnore
+    private String pushToken;
 
 
 
