@@ -73,7 +73,7 @@ public class RideController {
 
         DBFile dbFile = DBFileStorageService.storeFile(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/api/downloadFile/")
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
 
