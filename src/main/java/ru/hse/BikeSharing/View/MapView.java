@@ -1,16 +1,17 @@
 package ru.hse.BikeSharing.View;
 
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.Command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import ru.hse.BikeSharing.Services.Broadcaster;
 import ru.hse.BikeSharing.components.GoogleMap;
 import ru.hse.BikeSharing.components.GoogleMapMarker;
 import ru.hse.BikeSharing.components.GoogleMapPoint;
@@ -20,7 +21,7 @@ import ru.hse.BikeSharing.domain.RestrictedZone;
 import ru.hse.BikeSharing.repo.BikeRepo;
 import ru.hse.BikeSharing.repo.RestrictedZoneRepo;
 
-@Route(value = "map", layout = MainLayout.class)
+@Route(value = "map")
 @StyleSheet("frontend://styles.css")
 public class MapView extends VerticalLayout {
 
@@ -28,6 +29,7 @@ public class MapView extends VerticalLayout {
     RestrictedZoneRepo zoneRepo;
 
     final String API_KEY = "AIzaSyA3wPm0y-ibxAD5qXCxTqz3yReluwcFbDE";
+
 
     @Autowired
     public MapView(BikeRepo repo,  RestrictedZoneRepo zoneRepo) {
@@ -44,13 +46,13 @@ public class MapView extends VerticalLayout {
             map.addMarker(marker);
         }
 
-        GoogleMapPolyline polylineManual = new GoogleMapPolyline();
-        polylineManual.addPoint(new GoogleMapPoint(55, 37));
-        polylineManual.addPoint(new GoogleMapPoint(56, 37));
-        polylineManual.addPoint(new GoogleMapPoint(55, 36));
-        polylineManual.addPoint(new GoogleMapPoint(54, 38));
-        polylineManual.getElement().setAttribute("closed", true);
-        map.addPolyline(polylineManual);
+//        GoogleMapPolyline polylineManual = new GoogleMapPolyline();
+//        polylineManual.addPoint(new GoogleMapPoint(55, 37));
+//        polylineManual.addPoint(new GoogleMapPoint(56, 37));
+//        polylineManual.addPoint(new GoogleMapPoint(55, 36));
+//        polylineManual.addPoint(new GoogleMapPoint(54, 38));
+//        polylineManual.getElement().setAttribute("closed", true);
+//        map.addPolyline(polylineManual);
 
         for (RestrictedZone zone: zoneRepo.findAll()) {
             GoogleMapPolyline polyline = new GoogleMapPolyline();
@@ -65,4 +67,5 @@ public class MapView extends VerticalLayout {
         add(map);
         setHeightFull();
     }
+
 }

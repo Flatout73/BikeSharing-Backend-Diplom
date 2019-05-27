@@ -37,7 +37,7 @@ public class QRCodeGenerator {
         DBFile dbFile = storageService.storeImage(pngData, imageName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("api/downloadFile/")
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
 
