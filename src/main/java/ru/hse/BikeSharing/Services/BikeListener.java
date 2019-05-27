@@ -37,16 +37,14 @@ public class BikeListener {
         while (true) {
             if (future.isDone()) {
                 try {
-                    Broadcaster.broadcast("All done");
                     if (future.get()){
                         System.out.println("In zone");
                     } else {
                         System.out.println("Not in zone");
-                        if (UI.getCurrent() != null) {
-                            Notification notification = new Notification(
-                                    "This notification has text content", 3000);
-                            notification.open();
-                        }
+//                        if (UI.getCurrent() != null) {
+//
+//                        }
+                        Broadcaster.broadcast("Bike isn't in the zone");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
