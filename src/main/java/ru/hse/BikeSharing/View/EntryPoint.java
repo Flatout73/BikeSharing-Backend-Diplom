@@ -39,7 +39,7 @@ public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
     protected void onDetach(DetachEvent detachEvent) {
         super.onDetach(detachEvent);
 
-        Broadcaster.unregister(this);
+       // Broadcaster.unregister(this);
     }
 
     @Override
