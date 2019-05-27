@@ -2,8 +2,10 @@ package ru.hse.BikeSharing.controller;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.domain.Bike;
+import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.repo.BikeRepo;
 
 import java.util.List;
@@ -48,5 +50,13 @@ public class BikeController {
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Bike bike) {
         bikeRepo.delete(bike);
+    }
+
+
+    @PutMapping("location")
+    public void updateLocation(@RequestBody Point point, @RequestParam String id) {
+        Bike bike = bikeRepo.findById(id).orElseThrow(() -> new NotFoundException("Not found bike"));
+        bike.setLocation(point);
+        bikeRepo.save(bike);
     }
 }

@@ -15,11 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.Services.DBFileStorageService;
-import ru.hse.BikeSharing.domain.DBFile;
+import ru.hse.BikeSharing.domain.*;
 import ru.hse.BikeSharing.errors.NotFoundException;
-import ru.hse.BikeSharing.domain.Transaction;
-import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.errors.PaymentException;
+import ru.hse.BikeSharing.repo.FeedbackRepo;
 import ru.hse.BikeSharing.repo.TransactionRepo;
 import ru.hse.BikeSharing.repo.UserRepo;
 
@@ -35,14 +34,16 @@ public class MainController {
 
     UserRepo userRepo;
     TransactionRepo transactionRepo;
+    FeedbackRepo feedbackRepo;
 
     private DBFileStorageService DBFileStorageService;
 
     @Autowired
-    public MainController(UserRepo userRepo, DBFileStorageService fileService, TransactionRepo transactionRepo) {
+    public MainController(UserRepo userRepo, DBFileStorageService fileService, TransactionRepo transactionRepo, FeedbackRepo feedbackRepo) {
         this.userRepo = userRepo;
         this.DBFileStorageService = fileService;
         this.transactionRepo = transactionRepo;
+        this.feedbackRepo = feedbackRepo;
     }
 
     @PostMapping("/tokensignin")
@@ -132,5 +133,15 @@ public class MainController {
                 .contentType(MediaType.parseMediaType(dbFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFileName() + "\"")
                 .body(new ByteArrayResource(dbFile.getData()));
+    }
+
+    @PostMapping("/feedback")
+    public Feedback createFeedback(@RequestHeader(value = "BS-User") String userId, @RequestBody Feedback feedback) {
+        User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
+
+        feedback.setUser(user);
+        feedbackRepo.save(feedback);
+
+        return feedback;
     }
 }

@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.router.*;
+import ru.hse.BikeSharing.domain.Alert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +36,10 @@ public class MainLayout extends Composite<Div>
 
     private Div buildMenu() {
         // Create links to each of the different sub views
-        RouterLink template = new RouterLink("Map",
-               MapView.class);
-        template.setId("map-link");
+        RouterLink template = new RouterLink("Alert",
+                AlertView.class);
+        template.setId("alert-link");
 
-        //e -> Notification.show("hello")
         RouterLink components = new RouterLink("Bikes",
                 BikeView.class);
         components.setId("bike-link");
@@ -53,9 +53,11 @@ public class MainLayout extends Composite<Div>
         targetPaths.put(components.getHref(), components);
         targetPaths.put(elements.getHref(), elements);
 
+        Anchor map = new Anchor("map", "Map");
+
         HtmlContainer ul = new HtmlContainer("ul");
         ul.setClassName("topnav");
-        ul.add(template, components, elements);
+        ul.add(template, components, elements, map);
 
         Div menu = new Div();
         menu.setClassName("menu");
