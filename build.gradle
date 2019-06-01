@@ -43,6 +43,12 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-security")
 
 	compile group: 'com.notnoop.apns', name: 'apns', version: '0.2.3'
+
+	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+	compile 'org.springframework.social:spring-social-facebook:2.0.3.RELEASE'
+	compile 'org.springframework.social:spring-social-core:1.1.6.RELEASE'
+	compile group: 'org.springframework.social', name: 'spring-social-config', version: '1.1.6.RELEASE'
 	
 	compile group: 'org.webjars.bowergithub.googlewebcomponents', name: 'google-map', version: '2.0.5'
 	

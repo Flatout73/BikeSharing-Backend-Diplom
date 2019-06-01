@@ -3,10 +3,13 @@ package ru.hse.BikeSharing.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.domain.Bike;
+import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.repo.BikeRepo;
+import ru.hse.BikeSharing.repo.UserRepo;
 
 import java.util.List;
 
@@ -14,10 +17,12 @@ import java.util.List;
 @RequestMapping("/api/bikes")
 public class BikeController {
     private final BikeRepo bikeRepo;
+    private final UserRepo userRepo;
 
     @Autowired
-    public BikeController(BikeRepo bikeRepo) {
+    public BikeController(BikeRepo bikeRepo, UserRepo userRepo) {
         this.bikeRepo = bikeRepo;
+        this.userRepo = userRepo;
     }
 
     @GetMapping("all")
@@ -59,4 +64,21 @@ public class BikeController {
         bike.setLocation(point);
         bikeRepo.save(bike);
     }
+
+    @PutMapping("booking")
+    public ResponseEntity<String> occupyBike(@RequestHeader(value = "BS-User") Long userId, @RequestParam String id, @RequestParam Boolean occupied) {
+        Bike bike = bikeRepo.findById(id).orElseThrow(() -> new NotFoundException("Not found bike"));
+
+        if (occupied) {
+            bike.setOccupiedByUserID(userId);
+        } else {
+            bike.setOccupiedByUserID(userId);
+        }
+
+        bikeRepo.save(bike);
+
+        return ResponseEntity.ok("Success");
+    }
+
+
 }

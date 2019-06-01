@@ -32,7 +32,7 @@ public class Bike extends AuditModel {
 
     private Point location;
 
-    private Boolean locked = true;
+    private Long occupiedByUserID;
 
     @JsonIgnore
     private String qrcodeURL;

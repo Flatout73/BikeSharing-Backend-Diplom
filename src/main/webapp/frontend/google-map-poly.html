@@ -402,6 +402,9 @@ child of `google-map` and will contain at least two `google-map-point` child ele
 
         _editableChanged: function() {
           this.poly && this.poly.setEditable(this.editable);
+          this.fire('google-map-poly-editable-changed', this.path);
+
+          //this.poly.set('str', this._convertPath);
         },
 
         _fillColorChanged: function() {
@@ -459,7 +462,7 @@ child of `google-map` and will contain at least two `google-map-point` child ele
         },
 
         _strokePositionChanged: function() {
-          this.poly && this.poly.set('strokePosition', this._convertStrokePosition());
+          this.poly && this.poly.set('strokePosition', this._convertStrokePosition())
         },
 
         _strokeWeightChanged: function() {
@@ -513,6 +516,10 @@ child of `google-map` and will contain at least two `google-map-point` child ele
         _convertStrokePosition: function() {
           return google.maps.StrokePosition && this.strokePosition ?
               google.maps.StrokePosition[this.strokePosition.toUpperCase()] : 0;
+        },
+
+        _convertPath: function() {
+          return this.path;
         },
 
         _createPoly: function() {
@@ -575,7 +582,35 @@ child of `google-map` and will contain at least two `google-map-point` child ele
             google.maps.event.addListenerOnce(this.map, 'click', function() {
               this._setEditing(false);
               this.fire('google-map-poly-path-updated', this.path);
+
+
             }.bind(this));
+          }
+        },
+
+        _getPoints: function() {
+          if (this.poly !== undefined) {
+            this.points = [];
+
+          var path = this.poly.getPath().sort();
+          var coordinateString = "[";
+
+          for (var i = 0; i < path.length; i++) {
+
+            coordinateString += "{ \"x\": " + path.getAt(i).lat() + ", \"y\": " + path.getAt(i).lng() + " }";
+            if (i !== path.length - 1) {
+                coordinateString += ", ";
+            }
+            // coordinates.push({
+            //   x: path.getAt(i).lat(),
+            //   y: path.getAt(i).lng()
+            // });
+            this._updatePoint(i, path.getAt(i));
+          }
+
+        return coordinateString + "]";
+        } else {
+            return null;
           }
         },
 
