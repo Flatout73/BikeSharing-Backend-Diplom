@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import ru.hse.BikeSharing.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepo extends JpaRepository<User, Long> {
 
@@ -14,5 +15,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     @Query("from User u where u.googleID like concat('%', :id, '%')")
     List<User> findByGoogleID(@Param("id") String id);
+
+    @Query("from User u where u.facebookID like concat('%', :id, '%')")
+    Optional<User> findByFacebookID(@Param("id") String id);
 
 }

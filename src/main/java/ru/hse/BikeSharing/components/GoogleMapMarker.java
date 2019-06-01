@@ -1,13 +1,11 @@
 package ru.hse.BikeSharing.components;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Synchronize;
-import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.shared.Registration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.hse.BikeSharing.events.DragEndEvent;
 
 @Tag("google-map-marker")
 @HtmlImport("bower_components/google-map/google-map-marker.html")
@@ -48,5 +46,4 @@ public class GoogleMapMarker extends Component {
     public Registration addDragEndListener(ComponentEventListener<DragEndEvent> dragEndListener) {
         return super.addListener(DragEndEvent.class, dragEndListener);
     }
-
 }

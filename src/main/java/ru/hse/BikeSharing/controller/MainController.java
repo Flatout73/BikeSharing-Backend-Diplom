@@ -13,7 +13,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.web.bind.annotation.*;
+import ru.hse.BikeSharing.Security.JwtTokenProvider;
 import ru.hse.BikeSharing.Services.DBFileStorageService;
 import ru.hse.BikeSharing.domain.*;
 import ru.hse.BikeSharing.errors.NotFoundException;
@@ -21,6 +27,8 @@ import ru.hse.BikeSharing.errors.PaymentException;
 import ru.hse.BikeSharing.repo.FeedbackRepo;
 import ru.hse.BikeSharing.repo.TransactionRepo;
 import ru.hse.BikeSharing.repo.UserRepo;
+
+import org.springframework.social.facebook.api.Facebook;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -36,6 +44,13 @@ public class MainController {
     TransactionRepo transactionRepo;
     FeedbackRepo feedbackRepo;
 
+    @Autowired
+    JwtTokenProvider tokenProvider;
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    private Facebook facebook;
+
     private DBFileStorageService DBFileStorageService;
 
     @Autowired
@@ -46,62 +61,81 @@ public class MainController {
         this.feedbackRepo = feedbackRepo;
     }
 
-    @PostMapping("/tokensignin")
-    public User create(@RequestBody String idTokenString) {
+    @PostMapping("/tokensignin/{isGoogle}")
+    public String create(@RequestBody String idTokenString, @PathVariable Boolean isGoogle) {
         //return userRepo.save(bike);
 
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jacksonFactory)
-                // Specify the CLIENT_ID of the app that accesses the backend:
-                .setAudience(Collections.singletonList("680941561279-iblnhng1op6pm79k0gk6dj6igd3eu7ch.apps.googleusercontent.com"))
-                .build();
+        if (isGoogle) {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jacksonFactory)
+                    // Specify the CLIENT_ID of the app that accesses the backend:
+                    .setAudience(Collections.singletonList("680941561279-iblnhng1op6pm79k0gk6dj6igd3eu7ch.apps.googleusercontent.com"))
+                    .build();
 
 // (Receive idTokenString by HTTPS POST)
 
-        GoogleIdToken idToken = null;
-        try {
-            idToken = verifier.verify(idTokenString);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (idToken != null) {
-            GoogleIdToken.Payload payload = idToken.getPayload();
+            GoogleIdToken idToken = null;
+            try {
+                idToken = verifier.verify(idTokenString);
+            } catch (GeneralSecurityException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            // Print user identifier
-            String userId = payload.getSubject();
-            System.out.println("User ID: " + userId);
+            if (idToken != null) {
+                GoogleIdToken.Payload payload = idToken.getPayload();
 
-            List<User> users = userRepo.findByGoogleID(userId);
-            User user;
-            if (!users.isEmpty()) {
-                 user = users.get(0);
-                return user;
-            } else {
-                // Get profile information from payload
-                String email = payload.getEmail();
-                boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-                String name = (String) payload.get("name");
-                String pictureUrl = (String) payload.get("picture");
-                String locale = (String) payload.get("locale");
+                // Print user identifier
+                String userId = payload.getSubject();
+                System.out.println("User ID: " + userId);
+
+                List<User> users = userRepo.findByGoogleID(userId);
+                User user;
+                if (!users.isEmpty()) {
+                    user = users.get(0);
+                } else {
+                    // Get profile information from payload
+                    String email = payload.getEmail();
+                    boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+                    String name = (String) payload.get("name");
+                    String pictureUrl = (String) payload.get("picture");
+                    String locale = (String) payload.get("locale");
 //            String familyName = (String) payload.get("family_name");
 //            String givenName = (String) payload.get("given_name");
 
-                user = new User();
-                user.setName(name);
-                user.setGoogleID(userId);
-                user.setEmail(email);
-                user.setPictureURL(pictureUrl);
-                user.setLocale(locale);
+                    user = new User();
+                    user.setName(name);
+                    user.setGoogleID(userId);
+                    user.setEmail(email);
+                    user.setPictureURL(pictureUrl);
+                    user.setLocale(locale);
 
-                userRepo.save(user);
-                return user;
+                    userRepo.save(user);
+                }
+
+                Authentication authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                user.getEmail(),
+                                userId
+                        )
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                String jwt = tokenProvider.generateToken(authentication);
+
+                return jwt;
+
+            } else {
+                System.out.println("Invalid ID token.");
+
+                throw new NotFoundException("Invalid ID token.");
             }
-
         } else {
-            System.out.println("Invalid ID token.");
-
-            throw new NotFoundException("Invalid ID token.");
+            facebook = new FacebookTemplate(idTokenString, "", "417024999083480");
+            org.springframework.social.facebook.api.User fb = facebook.userOperations().getUserProfile();
+            System.out.println(fb);
+            return "Success";
         }
     }
 
