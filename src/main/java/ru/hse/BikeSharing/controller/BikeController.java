@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hse.BikeSharing.Security.CurrentUser;
+import ru.hse.BikeSharing.Security.UserPrincipal;
 import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.errors.NotFoundException;
@@ -66,13 +68,13 @@ public class BikeController {
     }
 
     @PutMapping("booking")
-    public ResponseEntity<String> occupyBike(@RequestHeader(value = "BS-User") Long userId, @RequestParam String id, @RequestParam Boolean occupied) {
+    public ResponseEntity<String> occupyBike(@CurrentUser UserPrincipal user, @RequestParam String id, @RequestParam Boolean occupied) {
         Bike bike = bikeRepo.findById(id).orElseThrow(() -> new NotFoundException("Not found bike"));
 
         if (occupied) {
-            bike.setOccupiedByUserID(userId);
+            bike.setOccupiedByUserID(user.getId());
         } else {
-            bike.setOccupiedByUserID(userId);
+            bike.setOccupiedByUserID(user.getId());
         }
 
         bikeRepo.save(bike);

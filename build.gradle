@@ -43,6 +43,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-security")
 
 	compile group: 'com.notnoop.apns', name: 'apns', version: '0.2.3'
+	compile group: 'com.vaadin', name: 'vaadin-grid-pro-flow'
 
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 

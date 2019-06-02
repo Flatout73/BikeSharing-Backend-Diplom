@@ -8,10 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.hse.BikeSharing.domain.User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -19,22 +16,19 @@ import java.util.stream.Collectors;
 public class UserPrincipal implements UserDetails {
 
     private Long id;
-    private String name;
-
-    private String googleID;
-    private String facebookID;
+  //  private String googleID;
+  //  private String facebookID;
     private String email;
 
 
-    private Collection<? extends GrantedAuthority> authorities;
+    //private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String email, String facebookID, String googleID, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String email/*,  String facebookID, String googleID Collection<? extends GrantedAuthority> authorities*/) {
         this.id = id;
-        this.name = name;
-        this.googleID = googleID;
+        //this.googleID = googleID;
         this.email = email;
-        this.facebookID = facebookID;
-        this.authorities = authorities;
+        //this.facebookID = facebookID;
+      //  this.authorities = authorities;
     }
 
     public static UserPrincipal create(User user) {
@@ -42,16 +36,15 @@ public class UserPrincipal implements UserDetails {
 //                new SimpleGrantedAuthority(role.getName().name())
 //        ).collect(Collectors.toList());
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+       // List<GrantedAuthority> authorities = new ArrayList<>();
+        //authorities.add(new SimpleGrantedAuthority("USER"));
 
         return new UserPrincipal(
                 user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getFacebookID(),
-                user.getGoogleID(),
-                authorities
+                user.getEmail()
+               // user.getFacebookID(),
+               // user.getGoogleID()
+              //  authorities
         );
     }
 
@@ -63,16 +56,20 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        if (facebookID != null) {
-            return facebookID;
-        } else {
-            return googleID;
-        }
+//        if (facebookID != null) {
+//            return facebookID;
+//        } else {
+//            return googleID;
+//        }
+
+        return null;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+      //  return authorities;
+
+        return Arrays.asList(new SimpleGrantedAuthority("USER"));
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     List<User> findByName(@Param("name") String name);
 
     @Query("from User u where u.googleID like concat('%', :id, '%')")
-    List<User> findByGoogleID(@Param("id") String id);
+    Optional<User> findByGoogleID(@Param("id") String id);
 
     @Query("from User u where u.facebookID like concat('%', :id, '%')")
     Optional<User> findByFacebookID(@Param("id") String id);

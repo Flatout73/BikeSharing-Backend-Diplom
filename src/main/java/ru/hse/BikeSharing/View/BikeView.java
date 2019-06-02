@@ -32,8 +32,7 @@ public class BikeView extends VerticalLayout {
         this.editor = editor;
 
         add(toolbar, grid, editor);
-
-        this.setHeightFull();
+        this.setHeight("100%");
        // grid.setHeight("300px");
         //grid.setColumns("id", "name");
        // grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
