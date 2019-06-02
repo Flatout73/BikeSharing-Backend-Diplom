@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.hse.BikeSharing.domain.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -41,13 +42,16 @@ public class UserPrincipal implements UserDetails {
 //                new SimpleGrantedAuthority(role.getName().name())
 //        ).collect(Collectors.toList());
 
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("USER"));
+
         return new UserPrincipal(
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getFacebookID(),
                 user.getGoogleID(),
-                null
+                authorities
         );
     }
 
@@ -59,13 +63,17 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return facebookID;
+        if (facebookID != null) {
+            return facebookID;
+        } else {
+            return googleID;
+        }
     }
 
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return authorities;
-//    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

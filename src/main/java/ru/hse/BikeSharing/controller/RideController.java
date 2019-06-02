@@ -7,6 +7,8 @@ import org.springframework.data.geo.Point;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.hse.BikeSharing.Security.CurrentUser;
+import ru.hse.BikeSharing.Security.UserPrincipal;
 import ru.hse.BikeSharing.Services.DBFileStorageService;
 import ru.hse.BikeSharing.Services.PointDeserializer;
 import ru.hse.BikeSharing.domain.DBFile;
@@ -39,8 +41,8 @@ public class RideController {
     }
 
     @PostMapping("start")
-    public Ride createRide(@RequestHeader(value = "BS-User") /*@PathVariable("userId")*/ String userId, @RequestBody Ride ride) {
-        User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
+    public Ride createRide(@CurrentUser UserPrincipal currentUser , @RequestBody Ride ride) {
+        User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         //rideRepo.save(ride);;
         ride.setUser(user);
         rideRepo.save(ride);
@@ -49,8 +51,8 @@ public class RideController {
     }
 
     @PutMapping("end")
-    public Ride endRide(@RequestParam("file") MultipartFile file, @RequestHeader(value = "BS-User") String userId, @RequestParam("ride") String rideString) throws IOException {
-        User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
+    public Ride endRide(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal currentUser, @RequestParam("ride") String rideString) throws IOException {
+        User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
 
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
@@ -84,7 +86,8 @@ public class RideController {
     }
 
     @GetMapping("all")
-    public List<Ride> getRides(@RequestHeader(value = "BS-User") String userId) {
-        return rideRepo.findByUser(Long.parseLong(userId));
+    public List<Ride> getRides(@CurrentUser UserPrincipal currentUser) {
+        Long userId = currentUser.getId();
+        return rideRepo.findByUser(userId);
     }
 }

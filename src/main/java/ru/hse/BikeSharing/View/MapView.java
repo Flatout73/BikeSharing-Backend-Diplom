@@ -23,7 +23,7 @@ import ru.hse.BikeSharing.events.PolyEvent;
 import ru.hse.BikeSharing.repo.BikeRepo;
 import ru.hse.BikeSharing.repo.RestrictedZoneRepo;
 
-@Route(value = "map")
+@Route("map")
 @StyleSheet("frontend://styles.css")
 public class MapView extends VerticalLayout implements ComponentEventListener {
 

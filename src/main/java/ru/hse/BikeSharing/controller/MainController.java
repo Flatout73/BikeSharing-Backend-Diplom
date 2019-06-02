@@ -17,9 +17,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.facebook.api.ImageType;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
+import org.springframework.social.facebook.connect.FacebookConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.web.bind.annotation.*;
+import ru.hse.BikeSharing.Security.CurrentUser;
 import ru.hse.BikeSharing.Security.JwtTokenProvider;
+import ru.hse.BikeSharing.Security.UserPrincipal;
 import ru.hse.BikeSharing.Services.DBFileStorageService;
 import ru.hse.BikeSharing.domain.*;
 import ru.hse.BikeSharing.errors.NotFoundException;
@@ -35,7 +41,6 @@ import java.security.GeneralSecurityException;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api")
 public class MainController {
 
     private static final JacksonFactory jacksonFactory = new JacksonFactory();
@@ -49,7 +54,7 @@ public class MainController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    private Facebook facebook;
+    private FacebookConnectionFactory facebookConnectionFactory = new FacebookConnectionFactory("417024999083480", "2c7eb574a383c4f33871746fb826e67a");
 
     private DBFileStorageService DBFileStorageService;
 
@@ -132,14 +137,37 @@ public class MainController {
                 throw new NotFoundException("Invalid ID token.");
             }
         } else {
-            facebook = new FacebookTemplate(idTokenString, "", "417024999083480");
-            org.springframework.social.facebook.api.User fb = facebook.userOperations().getUserProfile();
-            System.out.println(fb);
-            return "Success";
+            AccessGrant accessGrant = new AccessGrant(idTokenString);
+            Connection<Facebook> connection = facebookConnectionFactory.createConnection(accessGrant);
+            Facebook facebook = connection.getApi();
+            String [] fields = { "id", "email",  "first_name", "last_name", "locale", "link" };
+            org.springframework.social.facebook.api.User userProfile = facebook.fetchObject("me", org.springframework.social.facebook.api.User.class, fields);
+            String imageURL = connection.createData().getImageUrl();
+
+            User user = userRepo.findByEmail(userProfile.getEmail()).orElse(new User());
+            user.setName(userProfile.getFirstName() + " " + userProfile.getLastName());
+            user.setFacebookID(userProfile.getId());
+            user.setEmail(userProfile.getEmail());
+            user.setPictureURL(imageURL);
+
+            userRepo.save(user);
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            user.getEmail(),
+                            userProfile.getId()
+                    )
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String jwt = tokenProvider.generateToken(authentication);
+
+            return jwt;
         }
     }
 
-    @PostMapping("/pay")
+    @PostMapping("api/pay")
     public void pay(@RequestBody Transaction transaction) {
         Stripe.apiKey = "sk_test_ZqNt8J9LjjVxFYgl79HegSIt00wxmbVVyS";
 
@@ -158,7 +186,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/downloadFile/{fileId}")
+    @GetMapping("api/downloadFile/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
         // Load file from database
         DBFile dbFile = DBFileStorageService.getFile(fileId);
@@ -169,9 +197,9 @@ public class MainController {
                 .body(new ByteArrayResource(dbFile.getData()));
     }
 
-    @PostMapping("/feedback")
-    public Feedback createFeedback(@RequestHeader(value = "BS-User") String userId, @RequestBody Feedback feedback) {
-        User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
+    @PostMapping("api/feedback")
+    public Feedback createFeedback(@CurrentUser UserPrincipal currentUser, @RequestBody Feedback feedback) {
+        User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
 
         feedback.setUser(user);
         feedbackRepo.save(feedback);

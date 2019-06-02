@@ -19,4 +19,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
     @Query("from User u where u.facebookID like concat('%', :id, '%')")
     Optional<User> findByFacebookID(@Param("id") String id);
 
+    @Query("from User u where u.email like concat('%', :email, '%')")
+    Optional<User> findByEmail(@Param("email") String email);
+
 }
