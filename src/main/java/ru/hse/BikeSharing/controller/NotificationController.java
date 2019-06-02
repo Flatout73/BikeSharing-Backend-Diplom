@@ -5,6 +5,8 @@ import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.hse.BikeSharing.Security.CurrentUser;
+import ru.hse.BikeSharing.Security.UserPrincipal;
 import ru.hse.BikeSharing.domain.Ride;
 import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.errors.NotFoundException;
@@ -29,8 +31,8 @@ public class NotificationController {
     }
 
     @PostMapping("register")
-    public void registerUser(@RequestHeader(value = "BS-User") String userId, @RequestParam String token) {
-        User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
+    public void registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam String token) {
+        User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         user.setPushToken(token);
 
         userRepo.save(user);
