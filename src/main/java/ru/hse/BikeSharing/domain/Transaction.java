@@ -21,6 +21,5 @@ public class Transaction extends AuditModel {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ride_id")
-    @JsonIgnore
     private Ride ride;
 }

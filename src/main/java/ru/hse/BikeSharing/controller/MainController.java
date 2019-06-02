@@ -31,6 +31,7 @@ import ru.hse.BikeSharing.domain.*;
 import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.errors.PaymentException;
 import ru.hse.BikeSharing.repo.FeedbackRepo;
+import ru.hse.BikeSharing.repo.RideRepo;
 import ru.hse.BikeSharing.repo.TransactionRepo;
 import ru.hse.BikeSharing.repo.UserRepo;
 
@@ -50,6 +51,8 @@ public class MainController {
     FeedbackRepo feedbackRepo;
 
     @Autowired
+    RideRepo rideRepo;
+    @Autowired
     JwtTokenProvider tokenProvider;
     @Autowired
     AuthenticationManager authenticationManager;
@@ -68,7 +71,6 @@ public class MainController {
 
     @PostMapping("/tokensignin/{isGoogle}")
     public String create(@RequestBody String idTokenString, @PathVariable Boolean isGoogle) {
-        //return userRepo.save(bike);
 
         if (isGoogle) {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), jacksonFactory)
@@ -94,29 +96,22 @@ public class MainController {
                 String userId = payload.getSubject();
                 System.out.println("User ID: " + userId);
 
-                List<User> users = userRepo.findByGoogleID(userId);
-                User user;
-                if (!users.isEmpty()) {
-                    user = users.get(0);
-                } else {
-                    // Get profile information from payload
-                    String email = payload.getEmail();
-                    boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-                    String name = (String) payload.get("name");
-                    String pictureUrl = (String) payload.get("picture");
-                    String locale = (String) payload.get("locale");
-//            String familyName = (String) payload.get("family_name");
-//            String givenName = (String) payload.get("given_name");
+                // Get profile information from payload
+                String email = payload.getEmail();
+                String name = (String) payload.get("name");
+                String pictureUrl = (String) payload.get("picture");
+                String locale = (String) payload.get("locale");
 
-                    user = new User();
-                    user.setName(name);
-                    user.setGoogleID(userId);
-                    user.setEmail(email);
-                    user.setPictureURL(pictureUrl);
-                    user.setLocale(locale);
+                User user = userRepo.findByEmail(email) .orElse(new User());
 
-                    userRepo.save(user);
-                }
+                user.setName(name);
+                user.setGoogleID(userId);
+                user.setEmail(email);
+                user.setPictureURL(pictureUrl);
+                user.setLocale(locale);
+
+                userRepo.save(user);
+
 
                 Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -167,9 +162,11 @@ public class MainController {
         }
     }
 
-    @PostMapping("api/pay")
-    public void pay(@RequestBody Transaction transaction) {
+    @PostMapping("api/pay/{rideID}")
+    public Transaction pay(@PathVariable Long rideID, @RequestBody Transaction transaction) {
         Stripe.apiKey = "sk_test_ZqNt8J9LjjVxFYgl79HegSIt00wxmbVVyS";
+
+        Ride ride = rideRepo.findById(rideID).orElseThrow(() -> new NotFoundException("Ride not found"));
 
         Map<String, Object> chargeParams = new HashMap<String, Object>();
         chargeParams.put("amount", (int)(transaction.getCost() * 100));
@@ -177,13 +174,18 @@ public class MainController {
         chargeParams.put("description", transaction.getDescription());
         chargeParams.put("source", transaction.getToken());
 
+        ride.setTransaction(transaction);
+
         transactionRepo.save(transaction);
+        rideRepo.save(ride);
 
         try {
             Charge.create(chargeParams);
         } catch (StripeException e) {
             throw new PaymentException(e.getMessage());
         }
+
+        return transaction;
     }
 
     @GetMapping("api/downloadFile/{fileId}")

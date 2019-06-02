@@ -10,22 +10,20 @@ import ru.hse.BikeSharing.repo.AlertRepo;
 import ru.hse.BikeSharing.repo.UserRepo;
 
 @Route(value = "alerts", layout = MainLayout.class)
-public class AlertView extends VerticalLayout {
+public class AlertView extends AbstractGridView<Alert> {
 
-    private Grid<Alert> grid = new Grid<>(Alert.class);
     private AlertRepo repo;
 
     @Autowired
     public AlertView(AlertRepo repo) {
+        super(new Grid<>(Alert.class));
         this.repo = repo;
 
-        add(grid);
 
         grid.asSingleSelect().addValueChangeListener(e -> {
             grid.getUI().ifPresent(ui -> ui.navigate(RideView.class, e.getValue().getId().toString()));
         });
 
-        this.setHeightFull();
         showUsers("");
     }
 

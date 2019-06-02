@@ -30,8 +30,12 @@ public class MainLayout extends Composite<Div>
         container = new Div();
         container.addClassName("container");
 
+        container.setHeight("100%");
+
         getContent().addClassName("main-view");
         getContent().add(menu, container);
+
+        getContent().setHeight("90%");
     }
 
     private Div buildMenu() {

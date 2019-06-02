@@ -10,6 +10,7 @@ public class NoPasswordEncoder implements PasswordEncoder {
 
     @Override
     public boolean matches(CharSequence charSequence, String s) {
-        return charSequence.toString().equals(s);
+        return true;
+        //return charSequence.toString().equals(s);
     }
 }

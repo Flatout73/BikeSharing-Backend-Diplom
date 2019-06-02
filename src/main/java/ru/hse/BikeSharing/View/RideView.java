@@ -15,30 +15,19 @@ import ru.hse.BikeSharing.repo.UserRepo;
 import java.util.Optional;
 
 @Route("rides")
-public class RideView extends VerticalLayout implements HasUrlParameter<String> {
+public class RideView extends AbstractGridView<Ride> implements HasUrlParameter<String> {
 
-    private Grid<Ride> grid = new Grid<>(Ride.class);
+  //  private Grid<Ride> grid = new Grid<>(Ride.class);
     private RideRepo rideRepo;
     private UserRepo userRepo;
 
-    private Button addButton = new Button("Add new");
-
     @Autowired
     public RideView(RideRepo rideRepo, UserRepo userRepo) {
+        super(new Grid<>(Ride.class));
+
         this.rideRepo = rideRepo;
         this.userRepo = userRepo;
-
-        add(grid);
     }
-
-
-//    private void showUsers(String name) {
-//        if (name.isEmpty()) {
-//            grid.setItems(rideRepo.findAll());
-//        } else {
-//            //grid.setItems(rideRepo.findByName(name));
-//        }
-//    }
 
     @Override
     public void setParameter(BeforeEvent event, String parameter) {

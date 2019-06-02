@@ -9,22 +9,18 @@ import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.repo.UserRepo;
 
 @Route(value = "users", layout = MainLayout.class)
-public class UserView extends VerticalLayout {
-
-    private Grid<User> grid = new Grid<>(User.class);
+public class UserView extends AbstractGridView<User> {
     private UserRepo userRepo;
 
     @Autowired
     public UserView(UserRepo userRepo) {
+        super(new Grid<>(User.class));
         this.userRepo = userRepo;
-
-        add(grid);
 
         grid.asSingleSelect().addValueChangeListener(e -> {
             grid.getUI().ifPresent(ui -> ui.navigate(RideView.class, e.getValue().getId().toString()));
         });
 
-        this.setHeightFull();
         showUsers("");
     }
 

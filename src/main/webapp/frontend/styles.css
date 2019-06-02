@@ -24,7 +24,7 @@ h2 {
 /*}*/
 
 .container {
-    margin-top: 20px;
+    margin-top: 0px;
     padding: 0 20px 0 20px;
 }
 
@@ -37,8 +37,6 @@ h2 {
     position: relative;
     top: 0;
     left: 0;
-    margin: auto;
-    height: 90px;
 }
 
 .topnav {
