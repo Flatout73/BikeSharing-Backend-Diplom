@@ -39,7 +39,7 @@ public class NotificationController {
     }
 
     @GetMapping("/send")
-    public String notification(@RequestParam(required = false) String userId) {
+    public String notification(@RequestParam(required = false) String userId, @RequestParam String text) {
 
         String token;
         if (userId != null) {
@@ -51,8 +51,7 @@ public class NotificationController {
         System.out.println("Sending an iOS push notification…");
 
         String payload = APNS.newPayload()
-                .alertBody("Сеня пидор").build();
-                //.alertTitle("test alert title").build()
+                .alertBody(text).build();
 
         System.out.println("payload: "+payload);
 
