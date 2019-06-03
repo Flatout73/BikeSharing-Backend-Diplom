@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.router.*;
 import ru.hse.BikeSharing.domain.Alert;
+import ru.hse.BikeSharing.domain.Feedback;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,16 +53,21 @@ public class MainLayout extends Composite<Div>
                 UserView.class);
         elements.setId("user-link");
 
+        RouterLink feedbacks = new RouterLink("Feedback",
+                FeedbackView.class);
+        elements.setId("feedback-link");
+
         // Add menu links to a map for selection handling.
         targetPaths.put(template.getHref(), template);
         targetPaths.put(components.getHref(), components);
         targetPaths.put(elements.getHref(), elements);
+        targetPaths.put(feedbacks.getHref(), feedbacks);
 
         Anchor map = new Anchor("map", "Map");
 
         HtmlContainer ul = new HtmlContainer("ul");
         ul.setClassName("topnav");
-        ul.add(template, components, elements, map);
+        ul.add(template, components, elements, map, feedbacks);
 
         Div menu = new Div();
         menu.setClassName("menu");
