@@ -41,7 +41,7 @@ public class NotificationController {
     }
 
     @GetMapping("/send")
-    public String notification(@RequestParam(required = false) String userId, @RequestParam String text) {
+    public ApnsNotification notification(@RequestParam(required = false) String userId, @RequestParam String text) {
 
         String token;
         if (userId != null) {
@@ -59,6 +59,6 @@ public class NotificationController {
 
         ApnsNotification notification = service.push(token, payload);
 
-        return "Success";
+        return notification;
     }
 }
