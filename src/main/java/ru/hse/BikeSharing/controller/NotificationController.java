@@ -4,6 +4,7 @@ import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.Security.CurrentUser;
 import ru.hse.BikeSharing.Security.UserPrincipal;
@@ -31,11 +32,13 @@ public class NotificationController {
     }
 
     @PostMapping("register")
-    public void registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam String token) {
+    public ResponseEntity<String> registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam String token) {
         User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         user.setPushToken(token);
 
         userRepo.save(user);
+
+        return ResponseEntity.ok("Success");
     }
 
     @GetMapping("/send")
@@ -46,7 +49,7 @@ public class NotificationController {
             User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
             token = user.getPushToken();
         } else {
-            token = "343522a8456ab9bb91280b619b442e42dbb947c2c6e8b2a17bdb6eee99434253";
+            token = "e18b90bdeeed4953d5006833e2ea2ad30088669df30ecb31c70fc1ae08d0db6f";
         }
         System.out.println("Sending an iOS push notification…");
 
