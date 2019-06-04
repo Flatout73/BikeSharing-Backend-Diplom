@@ -37,7 +37,7 @@ public class BikeView extends VerticalLayout {
         //grid.setColumns("id", "name");
        // grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
 
-        filter.setPlaceholder("Filter by last name");
+        filter.setPlaceholder("Фильтр по имени");
 
         // Hook logic to components
 

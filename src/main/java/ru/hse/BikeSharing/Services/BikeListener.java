@@ -34,7 +34,7 @@ public class BikeListener {
 
     @PostUpdate
     public void postUpdate(Bike bike) {
-       Future<Boolean> future = service.checkZone(bike.getLocation());
+       Future<Boolean> future = service.checkZone(bike.getLocation(), bike.getName());
         while (true) {
             if (future.isDone()) {
                 try {
@@ -42,10 +42,7 @@ public class BikeListener {
                         System.out.println("In zone");
                     } else {
                         System.out.println("Not in zone");
-                        Broadcaster.broadcast("Bike " + bike.getName() + " isn't in the zone");
-
-                        Alert alert = new Alert();
-                        alert.setMessage("Bike " + bike.getName() + " isn't in the zone");
+                        Broadcaster.broadcast("Bike \"" + bike.getName() + "\" isn't in the zone");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
