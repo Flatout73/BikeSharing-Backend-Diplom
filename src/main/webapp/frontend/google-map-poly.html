@@ -592,7 +592,7 @@ child of `google-map` and will contain at least two `google-map-point` child ele
           if (this.poly !== undefined) {
             this.points = [];
 
-          var path = this.poly.getPath().sort();
+          var path = this.poly.getPath();
           var coordinateString = "[";
 
           for (var i = 0; i < path.length; i++) {

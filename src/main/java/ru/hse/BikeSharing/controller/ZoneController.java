@@ -29,6 +29,11 @@ public class ZoneController {
         return zone;
     }
 
+    @GetMapping("/all")
+    public List<RestrictedZone> getZones() {
+        return restrictedZoneRepo.findAll();
+    }
+
     @GetMapping("alerts")
     public List<Alert> getAlerts() {
         return alertRepo.findAll();
