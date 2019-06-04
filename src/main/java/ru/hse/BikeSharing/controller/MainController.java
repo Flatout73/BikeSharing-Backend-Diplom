@@ -198,8 +198,17 @@ public class MainController {
         return transaction;
     }
 
+    @GetMapping("downloadFile/{fileId}")
+    public ResponseEntity<Resource> downloadFileApi(@PathVariable Long fileId) {
+        return getFile(fileId);
+    }
+
     @GetMapping("api/downloadFile/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
+        return getFile(fileId);
+    }
+
+    private ResponseEntity<Resource> getFile(Long fileId) {
         // Load file from database
         DBFile dbFile = DBFileStorageService.getFile(fileId);
 
