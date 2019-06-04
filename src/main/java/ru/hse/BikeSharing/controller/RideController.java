@@ -45,10 +45,9 @@ public class RideController {
         User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         //rideRepo.save(ride);;
         ride.setUser(user);
-        rideRepo.save(ride);
-
         //удаление транзакции на старте
         ride.setTransaction(null);
+        rideRepo.save(ride);
 
         return ride;
     }
