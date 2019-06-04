@@ -16,7 +16,6 @@ import ru.hse.BikeSharing.repo.UserRepo;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
-@RequestMapping("/api/notification")
 public class NotificationController {
 
     UserRepo userRepo;
@@ -31,8 +30,8 @@ public class NotificationController {
         this.userRepo = userRepo;
     }
 
-    @PostMapping("register")
-    public ResponseEntity<String> registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam("token") String token) {
+    @PostMapping("/api/notification/register")
+    public ResponseEntity<String> registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam String token) {
         User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         user.setPushToken(token);
 
