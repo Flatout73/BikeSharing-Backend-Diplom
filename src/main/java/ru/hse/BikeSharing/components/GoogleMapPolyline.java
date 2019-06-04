@@ -30,9 +30,4 @@ public class GoogleMapPolyline extends Component {
     public Registration addDragEndListener(ComponentEventListener<PolyEvent> dragEndListener) {
         return super.addListener(PolyEvent.class, dragEndListener);
     }
-
-    @ClientCallable
-    protected void _closedChanged() {
-        System.out.println("lol");
-    }
 }

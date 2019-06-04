@@ -7,6 +7,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -24,6 +26,7 @@ import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.Security.CurrentUser;
+import ru.hse.BikeSharing.Security.JwtAuthenticationFilter;
 import ru.hse.BikeSharing.Security.JwtTokenProvider;
 import ru.hse.BikeSharing.Security.UserPrincipal;
 import ru.hse.BikeSharing.Services.DBFileStorageService;
@@ -43,6 +46,8 @@ import java.util.*;
 
 @RestController
 public class MainController {
+
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     private static final JacksonFactory jacksonFactory = new JacksonFactory();
 
@@ -124,11 +129,12 @@ public class MainController {
 
                 String jwt = tokenProvider.generateToken(authentication);
 
+                logger.info(email + " google user logged");
+
                 return jwt;
 
             } else {
-                System.out.println("Invalid ID token.");
-
+                logger.error("Invalid ID token.");
                 throw new NotFoundException("Invalid ID token.");
             }
         } else {
@@ -158,6 +164,8 @@ public class MainController {
 
             String jwt = tokenProvider.generateToken(authentication);
 
+            logger.info(userProfile.getEmail() + " facebook user logged");
+
             return jwt;
         }
     }
@@ -184,6 +192,8 @@ public class MainController {
         } catch (StripeException e) {
             throw new PaymentException(e.getMessage());
         }
+
+        logger.info("Transaction for " + rideID);
 
         return transaction;
     }

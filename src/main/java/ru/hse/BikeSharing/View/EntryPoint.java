@@ -8,6 +8,10 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.EnableAsync;
+import ru.hse.BikeSharing.Services.BikeListener;
 import ru.hse.BikeSharing.Services.Broadcaster;
 
 /**
@@ -17,12 +21,15 @@ import ru.hse.BikeSharing.Services.Broadcaster;
 @Route(value = "", layout = MainLayout.class)
 public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
 
+    private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
+
     /**
      * Navigation target constructor.
      */
     public EntryPoint() {
         setText("Выберите страницу");
         Broadcaster.register(this);
+        logger.info("Register user for broadcast");
     }
 
     UI currentUI;
@@ -33,6 +40,8 @@ public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
         super.onAttach(attachEvent);
 
         currentUI = getUI().get();
+        logger.info("Get ui");
+
     }
 
     @Override
