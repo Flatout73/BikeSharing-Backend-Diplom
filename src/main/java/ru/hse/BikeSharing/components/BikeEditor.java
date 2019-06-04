@@ -136,6 +136,9 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
             repository.save(bike);
             //changeHandler.onChange();
             qrImage.setSrc(bike.getQrcodeURL());
+
+            qrImage.setWidth("200px");
+            qrImage.setHeight("200px");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
