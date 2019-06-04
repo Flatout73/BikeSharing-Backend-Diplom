@@ -66,6 +66,9 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
 
         add(qrHorizontal, actions);
 
+        qrHorizontal.setAlignItems(Alignment.CENTER);
+        qrHorizontal.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
         binder.bind(locationX, bike -> {
             if (bike.getLocation() != null) {
                 return String.valueOf(bike.getLocation().getX());
@@ -114,8 +117,6 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
         cancel.addClickListener(e -> editBike(bike));
 
         qrcode.addClickListener(e -> setQrcode());
-        qrImage.setWidth("200px");
-        qrImage.setHeight("200px");
 
         setVisible(false);
     }
@@ -139,6 +140,7 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
 
             qrImage.setWidth("200px");
             qrImage.setHeight("200px");
+            qrImage.setSizeFull();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
