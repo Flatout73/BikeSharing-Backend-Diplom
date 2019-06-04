@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.hse.BikeSharing.domain.Alert;
 import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.domain.RestrictedZone;
 import ru.hse.BikeSharing.repo.AlertRepo;
@@ -41,10 +42,10 @@ public class BikeListener {
                         System.out.println("In zone");
                     } else {
                         System.out.println("Not in zone");
-//                        if (UI.getCurrent() != null) {
-//
-//                        }
-                        Broadcaster.broadcast("Bike isn't in the zone");
+                        Broadcaster.broadcast("Bike " + bike.getName() + " isn't in the zone");
+
+                        Alert alert = new Alert();
+                        alert.setMessage("Bike " + bike.getName() + " isn't in the zone");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

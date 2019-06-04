@@ -34,12 +34,6 @@ public class ZoneService {
             }
         }
 
-        if (!isContains) {
-            Alert alert = new Alert();
-            alert.setMessage("Bike isn't in zone");
-            repo.save(alert);
-        }
-
         return new AsyncResult<Boolean>(isContains);
     }
 
