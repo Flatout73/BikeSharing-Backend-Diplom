@@ -29,7 +29,7 @@ public class MainLayout extends Composite<Div>
     private Div container;
 
     UI currentUI;
-    
+
     public MainLayout() {
         Div menu = buildMenu();
 
