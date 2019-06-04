@@ -19,7 +19,7 @@ import ru.hse.BikeSharing.Services.Broadcaster;
  */
 @PageTitle("Start")
 @Route(value = "", layout = MainLayout.class)
-public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
+public class EntryPoint extends Div {
 
     private static final Logger logger = LoggerFactory.getLogger(EntryPoint.class);
 
@@ -28,19 +28,6 @@ public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
      */
     public EntryPoint() {
         setText("Выберите страницу");
-        Broadcaster.register(this);
-        logger.info("Register user for broadcast");
-    }
-
-    UI currentUI;
-
-
-    @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        super.onAttach(attachEvent);
-
-        currentUI = getUI().get();
-        logger.info("Get ui");
 
     }
 
@@ -49,18 +36,5 @@ public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
         super.onDetach(detachEvent);
 
        // Broadcaster.unregister(this);
-    }
-
-    @Override
-    public void receiveBroadcast(final String message) {
-        currentUI.access(new Command() {
-            @Override
-            public void execute() {
-                Notification n = new Notification(message, 2000);
-                n.open();
-            }
-        });
-
-
     }
 }
