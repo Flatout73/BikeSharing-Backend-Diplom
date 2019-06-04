@@ -2,6 +2,7 @@ package ru.hse.BikeSharing.View;
 
 
 import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
@@ -34,6 +35,8 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
 
     GoogleMap map = new GoogleMap(API_KEY);
 
+    PolyEvent currentEvent;
+
     @Autowired
     public MapView(BikeRepo repo, RestrictedZoneRepo zoneRepo) {
         this.repo = repo;
@@ -56,6 +59,7 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
 
         for (RestrictedZone zone: zoneRepo.findAll()) {
             GoogleMapPolyline polyline = new GoogleMapPolyline();
+            polyline.zone = zone;
             for (Point point: zone.getPoints()) {
                 GoogleMapPoint mapPoint = new GoogleMapPoint(point.getX(), point.getY());
                 polyline.addPoint(mapPoint);
@@ -71,7 +75,11 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
             map.getPolylines().forEach(poly -> poly.getElement().setAttribute("editable", event.getValue()));
         });
 
-        add(map, valueChangeCheckbox);
+        Button saveButton = new Button("Save", e -> {
+            savePath();
+        });
+
+        add(map, valueChangeCheckbox, saveButton);
         setHeightFull();
     }
 
@@ -90,6 +98,16 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
                 GoogleMapPoint mapPoint = new GoogleMapPoint(point.getX(), point.getY());
                 polyline.addPoint(mapPoint);
             }
+        }
+
+        currentEvent = polyEvent;
+    }
+
+    void savePath() {
+        if (currentEvent != null) {
+            RestrictedZone zone = currentEvent.getSource().zone;
+            zone.setPoints(currentEvent.newPoints);
+            zoneRepo.save(zone);
         }
     }
 }

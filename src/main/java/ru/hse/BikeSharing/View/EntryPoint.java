@@ -47,7 +47,7 @@ public class EntryPoint extends Div implements Broadcaster.BroadcastListener{
         currentUI.access(new Command() {
             @Override
             public void execute() {
-                Notification n = new Notification(message);
+                Notification n = new Notification(message, 2000);
                 n.open();
             }
         });

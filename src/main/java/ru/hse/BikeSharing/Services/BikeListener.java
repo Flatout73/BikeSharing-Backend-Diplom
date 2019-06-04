@@ -42,7 +42,7 @@ public class BikeListener {
                         System.out.println("In zone");
                     } else {
                         System.out.println("Not in zone");
-                        Broadcaster.broadcast("Bike \"" + bike.getName() + "\" isn't in the zone");
+                        Broadcaster.broadcast("Велосипед \"" + bike.getName() + "\" не в зоне");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
