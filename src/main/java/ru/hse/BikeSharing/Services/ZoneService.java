@@ -23,7 +23,6 @@ public class ZoneService {
     @Autowired
     private RestrictedZoneRepo zoneRepo;
 
-
     @Async
     public Future<Boolean> checkZone(Point point, String bikeName) {
         Boolean isContains = false;

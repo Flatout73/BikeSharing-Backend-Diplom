@@ -11,8 +11,11 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
+import ru.hse.BikeSharing.Services.BikeListener;
 import ru.hse.BikeSharing.Services.Broadcaster;
 import ru.hse.BikeSharing.components.GoogleMap;
 import ru.hse.BikeSharing.components.GoogleMapMarker;
@@ -27,6 +30,8 @@ import ru.hse.BikeSharing.repo.RestrictedZoneRepo;
 @Route("map")
 @StyleSheet("frontend://styles.css")
 public class MapView extends VerticalLayout implements ComponentEventListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(BikeListener.class);
 
     BikeRepo repo;
     RestrictedZoneRepo zoneRepo;
@@ -86,7 +91,7 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
     @Override
     public void onComponentEvent(ComponentEvent event) {
         PolyEvent polyEvent = (PolyEvent) event;
-        System.out.println(polyEvent.newPoints);
+        logger.info("Polyline for zone " + polyEvent.getSource().zone.getId() + " with new points: ", polyEvent.newPoints);
 
         GoogleMapPolyline polyline = ((PolyEvent) event).getSource();
         if (polyEvent.newPoints != null) {
@@ -108,6 +113,8 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
             RestrictedZone zone = currentEvent.getSource().zone;
             zone.setPoints(currentEvent.newPoints);
             zoneRepo.save(zone);
+
+            logger.info("Save path for zone " + zone.getId());
         }
     }
 }

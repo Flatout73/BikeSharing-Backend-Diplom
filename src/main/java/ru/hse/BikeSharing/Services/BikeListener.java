@@ -3,10 +3,13 @@ package ru.hse.BikeSharing.Services;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.page.Push;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import ru.hse.BikeSharing.controller.MainController;
 import ru.hse.BikeSharing.domain.Alert;
 import ru.hse.BikeSharing.domain.Bike;
 import ru.hse.BikeSharing.domain.RestrictedZone;
@@ -24,6 +27,8 @@ import java.util.concurrent.Future;
 @Component
 public class BikeListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(BikeListener.class);
+
     private static ZoneService service;
 
     @Autowired
@@ -39,9 +44,9 @@ public class BikeListener {
             if (future.isDone()) {
                 try {
                     if (future.get()){
-                        System.out.println("In zone");
+                        logger.info(bike.getId() + " in zone");
                     } else {
-                        System.out.println("Not in zone");
+                        logger.info(bike.getId() + " isn't in zone");
                         Broadcaster.broadcast("Велосипед \"" + bike.getName() + "\" не в зоне");
                     }
                 } catch (InterruptedException e) {

@@ -144,7 +144,6 @@ public class SecurityConfig {
     }
 
     @Configuration
-    @Order(3)
     public static class AdminWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         @Override
