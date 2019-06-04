@@ -41,7 +41,7 @@ public class RideController {
     }
 
     @PostMapping("start")
-    public Ride createRide(@CurrentUser UserPrincipal currentUser , @RequestBody Ride ride) {
+    public Ride createRide(@CurrentUser UserPrincipal currentUser, @RequestBody Ride ride) {
         User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         //rideRepo.save(ride);;
         ride.setUser(user);

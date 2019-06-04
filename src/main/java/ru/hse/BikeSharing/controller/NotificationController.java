@@ -32,7 +32,7 @@ public class NotificationController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam String token) {
+    public ResponseEntity<String> registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam("token") String token) {
         User user = userRepo.findById(currentUser.getId()).orElseThrow(() -> new NotFoundException("Not found user"));
         user.setPushToken(token);
 
