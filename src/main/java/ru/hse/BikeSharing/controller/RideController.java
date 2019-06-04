@@ -47,6 +47,9 @@ public class RideController {
         ride.setUser(user);
         rideRepo.save(ride);
 
+        //удаление транзакции на старте
+        ride.setTransaction(null);
+
         return ride;
     }
 
