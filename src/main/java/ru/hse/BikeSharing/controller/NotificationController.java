@@ -8,27 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.BikeSharing.Security.CurrentUser;
 import ru.hse.BikeSharing.Security.UserPrincipal;
+import ru.hse.BikeSharing.Services.NotificationService;
 import ru.hse.BikeSharing.domain.Ride;
 import ru.hse.BikeSharing.domain.User;
 import ru.hse.BikeSharing.errors.NotFoundException;
 import ru.hse.BikeSharing.repo.UserRepo;
 
+import java.net.ConnectException;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class NotificationController {
 
+    @Autowired
     UserRepo userRepo;
 
-    ApnsService service = APNS.newService()
-            .withCert("src/main/resources/BikeSharingDevPush.p12", "qwerty123")
-            .withSandboxDestination()
-            .build();
-
     @Autowired
-    public NotificationController(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
+    NotificationService notificationService;
+
 
     @PostMapping("/api/notification/register")
     public ResponseEntity<String> registerUser(@CurrentUser UserPrincipal currentUser, @RequestParam String token) {
@@ -41,24 +38,7 @@ public class NotificationController {
     }
 
     @GetMapping("/send")
-    public ApnsNotification notification(@RequestParam(required = false) String userId, @RequestParam String text) {
-
-        String token;
-        if (userId != null) {
-            User user = userRepo.findById(Long.parseLong(userId)).orElseThrow(() -> new NotFoundException("Not found user"));
-            token = user.getPushToken();
-        } else {
-            token = "e18b90bdeeed4953d5006833e2ea2ad30088669df30ecb31c70fc1ae08d0db6f";
-        }
-        System.out.println("Sending an iOS push notification…");
-
-        String payload = APNS.newPayload()
-                .alertBody(text).build();
-
-        System.out.println("payload: "+payload);
-
-        ApnsNotification notification = service.push(token, payload);
-
-        return notification;
+    public ApnsNotification notification(@RequestParam(required = false) Long userId, @RequestParam String text) throws ConnectException {
+        return notificationService.sendPush(userId, text);
     }
 }

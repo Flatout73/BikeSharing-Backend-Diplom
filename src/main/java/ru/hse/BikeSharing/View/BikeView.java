@@ -21,7 +21,7 @@ public class BikeView extends VerticalLayout {
     private BikeRepo bikeRepo;
 
     TextField filter = new TextField("", "Type to filter");
-    Button addNewBtn = new Button("Add new");
+    Button addNewBtn = new Button("Добавить");
     BikeEditor editor;
 
     private HorizontalLayout toolbar = new HorizontalLayout(filter, addNewBtn);

@@ -57,17 +57,22 @@ public class MainLayout extends Composite<Div>
                 FeedbackView.class);
         elements.setId("feedback-link");
 
+        RouterLink pushs = new RouterLink("Push",
+                PushView.class);
+        elements.setId("push-link");
+
         // Add menu links to a map for selection handling.
         targetPaths.put(template.getHref(), template);
         targetPaths.put(components.getHref(), components);
         targetPaths.put(elements.getHref(), elements);
         targetPaths.put(feedbacks.getHref(), feedbacks);
+        targetPaths.put(pushs.getHref(), pushs);
 
         Anchor map = new Anchor("map", "Map");
 
         HtmlContainer ul = new HtmlContainer("ul");
         ul.setClassName("topnav");
-        ul.add(template, components, elements, map, feedbacks);
+        ul.add(template, components, elements, map, feedbacks, pushs);
 
         Div menu = new Div();
         menu.setClassName("menu");
