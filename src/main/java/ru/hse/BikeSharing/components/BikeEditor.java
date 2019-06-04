@@ -39,8 +39,8 @@ public class BikeEditor extends VerticalLayout implements KeyNotifier {
 
     /* Fields to edit properties in Customer entity */
     TextField name = new TextField("Bike name");
-    TextField locationX = new TextField("Location X");
-    TextField locationY = new TextField("Location Y");
+    TextField locationX = new TextField("Location X", "55.7572");
+    TextField locationY = new TextField("Location Y", "37.6201");
     Image qrImage = new Image();
 
     /* Action buttons */
