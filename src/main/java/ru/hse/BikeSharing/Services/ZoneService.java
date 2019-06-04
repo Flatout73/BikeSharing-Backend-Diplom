@@ -25,13 +25,19 @@ public class ZoneService {
 
 
     @Async
-    public Future<Boolean> checkZone(Point point) {
+    public Future<Boolean> checkZone(Point point, String bikeName) {
         Boolean isContains = false;
         for (RestrictedZone zone: zoneRepo.findAll()) {
             if (contains(point, zone.getPoints())) {
                 isContains = true;
                 break;
             }
+        }
+
+        if (!isContains) {
+            Alert alert = new Alert();
+            alert.setMessage("Bike \"" + bikeName + "\" isn't in zone");
+            repo.save(alert);
         }
 
         return new AsyncResult<Boolean>(isContains);
