@@ -39,7 +39,7 @@ public class BikeView extends VerticalLayout {
 
         filter.setPlaceholder("Фильтр по имени");
 
-        // Hook logic to components
+        grid.getColumns().stream().forEach(column -> column.setResizable(true));
 
         // Replace listing with filtered content when user changes filter
         filter.setValueChangeMode(ValueChangeMode.EAGER);

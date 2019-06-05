@@ -28,8 +28,6 @@ public class MainLayout extends Composite<Div>
 
     private Div container;
 
-    UI currentUI;
-
     public MainLayout() {
         Div menu = buildMenu();
 
@@ -93,15 +91,19 @@ public class MainLayout extends Composite<Div>
 
         Broadcaster.register(this);
         logger.info("Register user for broadcast");
+    }
 
-        currentUI = getUI().get();
-        logger.info("Get ui");
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+
+        Broadcaster.unregister(this);
     }
 
     @Override
     public void receiveBroadcast(final String message) {
-        if (currentUI != null) {
-            currentUI.access(new Command() {
+        getUI().ifPresent(ui -> {
+            ui.access(new Command() {
                 @Override
                 public void execute() {
                     Notification n = new Notification(message, 2000);
@@ -109,7 +111,7 @@ public class MainLayout extends Composite<Div>
                 }
             });
 
-        }
+        });
     }
 
     @Override
