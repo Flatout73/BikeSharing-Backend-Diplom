@@ -18,7 +18,7 @@ public class NotificationService {
     UserRepo userRepo;
 
     ApnsService service = APNS.newService()
-            .withCert("src/main/resources/BikeSharingDevPush.p12", "qwerty123")
+            .withCert("src/main/resources/BikeSharingPushProd.p12", "qwerty123")
             .withAppleDestination(true)
             //.withSandboxDestination()
             .build();
