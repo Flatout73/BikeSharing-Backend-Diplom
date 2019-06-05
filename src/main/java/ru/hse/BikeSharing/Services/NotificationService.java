@@ -19,7 +19,8 @@ public class NotificationService {
 
     ApnsService service = APNS.newService()
             .withCert("src/main/resources/BikeSharingDevPush.p12", "qwerty123")
-            .withSandboxDestination()
+            .withAppleDestination(true)
+            //.withSandboxDestination()
             .build();
 
 
