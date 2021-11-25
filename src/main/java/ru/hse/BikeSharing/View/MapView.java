@@ -36,7 +36,7 @@ public class MapView extends VerticalLayout implements ComponentEventListener {
     BikeRepo repo;
     RestrictedZoneRepo zoneRepo;
 
-    final String API_KEY = "AIzaSyA3wPm0y-ibxAD5qXCxTqz3yReluwcFbDE";
+    final String API_KEY = "";
 
     GoogleMap map = new GoogleMap(API_KEY);
 
